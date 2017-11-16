@@ -1,0 +1,134 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+
+	<title>8 Queens Problem by @housamz</title>
+	<meta name="description" content="A puzzle game based on the n-queen problem">
+	<meta name="author" content="@housamz">
+
+	<style type="text/css">
+		body{text-align:center;margin:auto; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif}
+		table{cursor:hand;margin:auto;border-collapse: collapse}
+		td{border: 1px solid #ccc;padding: 0}
+		tr:nth-child(odd) td:nth-child(odd), 
+		tr:nth-child(even) td:nth-child(even){background-color: #cce8f7}
+		.button{background-color:#2f6076;border:none;color:white;padding:10px 20px;display:inline-block;border-radius:5px;margin:5px;font-size:16px}
+	</style>
+
+	<!--[if lt IE 9]>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<br />
+	
+	<table>
+
+		<script language="javascript">
+			var closed = new Array(64);
+			var imgQueen = new Image(32, 32);
+			var imgEmpty = new Image(32, 32);
+			var imgDot = new Image(32, 32);
+			var id = 0;
+			var count = 0;
+			imgQueen.src = "queen.png";
+			imgEmpty.src = "empty.png";
+			imgDot.src = "diamond.png";
+			for (var r = 0; r < 8; r++) {
+				document.write("<tr>");
+				for (var c = 0; c < 8; c++) {
+					id = (r * 8) + c;
+					document.write("<td id=" + id + ' onclick="placeq(this);">');
+					document.write('<img src="empty.png"></td>')
+				}
+				document.write("</tr>")
+			}
+
+			function placeq(cell) {
+				var q = eval(cell.id);
+				var r = Math.floor(q / 8);
+				var c = q % 8;
+				var min = Math.min(r, c);
+				var max = Math.max(r, c);
+				if ((document.images[q].src == imgEmpty.src) && (safe(q))) {
+					count++;
+					for (var h = r * 8; h < (r * 8) + 8; h++) {
+						closed[h] = h;
+						document.images[h].src = imgDot.src
+					}
+					for (var v = c; v < 64; v = v + 8) {
+						closed[v] = v;
+						document.images[v].src = imgDot.src
+					}
+					if (c > r) {
+						var x1 = c - r;
+						var x2 = q + (9 * (8 - c))
+					} else {
+						var x1 = (r - c) * 8;
+						var x2 = q + (9 * (8 - r))
+					}
+					for (var x = x1; x < x2; x = x + 9) {
+						closed[x] = x;
+						document.images[x].src = imgDot.src
+					}
+					if (r + c > 7) {
+						var y1 = q - ((7 - c) * 7);
+						var y2 = q + (7 * (8 - r))
+					} else {
+						var y1 = r + c;
+						var y2 = q + (8 * c)
+					}
+					for (var y = y1; y < y2; y = y + 7) {
+						closed[y] = y;
+						document.images[y].src = imgDot.src
+					}
+					document.images[q].src = imgQueen.src
+				}
+				if (count == 8) {
+					alert("Good job, you solved it!")
+				}
+				if (count > 8) {
+					alert("Too many queens")
+				}
+			}
+
+			function safe(a) {
+				if (closed[a] == a) {
+					return false
+				} else {
+					return true
+				}
+			}
+
+			function solution() {
+				var b = new Array(0, 12, 23, 29, 34, 46, 49, 59);
+				reset();
+				for (var d = 0; d < 8; d++) {
+					window.document.images[b[d]].src = imgQueen.src
+				}
+				count = 8;
+				for (var e = 0; e < 64; e++) {
+					closed[e] = e
+				}
+			}
+
+			function reset() {
+				for (var a = 0; a < 64; a++) {
+					window.document.images[a].src = imgEmpty.src
+				}
+				count = 0;
+				closed = new Array(64)
+			};
+		</script>
+	</table>
+	<br />
+	<input class="button" type="button" value=" Clear " onclick="reset()">
+	<input class="button" type="button" value=" ? " onclick="solution()">
+
+	<p>Based on: <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle" target="_blank">Eight queens puzzle</a></p>
+
+</body>
+</html>
